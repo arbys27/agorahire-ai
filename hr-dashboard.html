@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgoraHire AI - HR Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="logo-badge">A</div>
+        <div>
+          <div class="nav-title">AgoraHire AI</div>
+          <div class="nav-sub">HR Panel · Real-time AI Screening Results</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" onclick="window.location.href='index.html'">Back to Applicant View</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div class="hr-layout">
+      <aside class="hr-sidebar">
+        <h3>HR Control Panel</h3>
+        <p class="helper">Review AI-screened applicants and manage interviews.</p>
+        <div class="hr-menu">
+          <div class="hr-menu-item active">Dashboard</div>
+          <div class="hr-menu-item">Jobs handled <span>3</span></div>
+          <div class="hr-menu-item">AI interviews <span>Live</span></div>
+        </div>
+      </aside>
+
+      <section class="hr-main">
+        <div class="hr-main-header">
+          <div>
+            <div class="card-title">Applicants Overview</div>
+            <div class="card-subtitle">Synced via Agora RTM in real-time</div>
+          </div>
+          <div class="filters">
+            <select><option>All jobs</option></select>
+            <select><option>All statuses</option></select>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Job</th><th>AI Score</th><th>Status</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>APP-001</td>
+                <td>Juan Dela Cruz</td>
+                <td>Customer Support Associate</td>
+                <td>82 / 100</td>
+                <td><span class="badge badge-pass">Passed AI</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm">View</button>
+                  <button class="btn btn-primary btn-sm">Schedule</button>
+                </td>
+              </tr>
+              <tr>
+                <td>APP-002</td>
+                <td>Maria Santos</td>
+                <td>HR Operations Intern</td>
+                <td>69 / 100</td>
+                <td><span class="badge badge-pending">AI Pending</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm" disabled>Awaiting AI</button>
+                </td>
+              </tr>
+              <tr>
+                <td>APP-003</td>
+                <td>Mark Reyes</td>
+                <td>Cloud Support Engineer</td>
+                <td>54 / 100</td>
+                <td><span class="badge badge-fail">Failed AI</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm">View</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

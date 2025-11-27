@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AgoraHire AI – Application Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/application.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="logo-badge">A</div>
+        <div>
+          <div class="nav-title">AgoraHire AI</div>
+          <div class="nav-sub">AI Voice Pre-Screening · Powered by Agora + AWS</div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab active">
+          Applicant
+          <span class="pill">Apply</span>
+        </button>
+        <a href="hr-dashboard.html" class="nav-tab">
+          HR Panel
+          <span class="pill">Review</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="application-container">
+    <section class="application-layout">
+      <!-- JOB LIST -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Open Positions</div>
+            <div class="card-subtitle">Choose a role to start your AI pre-interview.</div>
+          </div>
+        </div>
+        <div class="job-list">
+          <div class="job-card" data-job="Customer Support Associate">
+            <div class="job-title">Customer Support Associate</div>
+            <div class="job-meta">
+              <span>Customer Experience</span>
+              <span>Entry-Mid</span>
+            </div>
+            <div class="job-tags">
+              <span class="job-tag">Hybrid</span>
+              <span class="job-tag">B2B SaaS</span>
+            </div>
+          </div>
+          <div class="job-card" data-job="HR Operations Intern">
+            <div class="job-title">HR Operations Intern</div>
+            <div class="job-meta">
+              <span>People & Culture</span>
+              <span>Internship</span>
+            </div>
+            <div class="job-tags">
+              <span class="job-tag">Onsite</span>
+              <span class="job-tag">Fresh grads</span>
+            </div>
+          </div>
+          <div class="job-card" data-job="Cloud Support Engineer">
+            <div class="job-title">Cloud Support Engineer</div>
+            <div class="job-meta">
+              <span>Engineering</span>
+              <span>Mid-Senior</span>
+            </div>
+            <div class="job-tags">
+              <span class="job-tag">Remote</span>
+              <span class="job-tag">AWS · Kubernetes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPLICATION FORM -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Application Form</div>
+            <div class="card-subtitle">
+              Selected role: <span id="selected-role-label">None</span>
+            </div>
+          </div>
+        </div>
+        <form id="application-form" class="application-form">
+          <input type="hidden" name="jobRole" id="jobRole" />
+
+          <div class="form-field">
+            <label for="fullName" class="form-label">Full name</label>
+            <input id="fullName" type="text" class="form-input" required placeholder="Juan Dela Cruz" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label for="email" class="form-label">Email</label>
+              <input id="email" type="email" class="form-input" required placeholder="you@example.com" />
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label for="phone" class="form-label">Phone number</label>
+              <div class="phone-input">
+                <input type="text" class="country-code" placeholder="+63" />
+                <input id="phone" type="tel" class="phone-number" required placeholder="9xx xxx xxxx" />
+              </div>
+              <div class="helper">Include country code for AI call.</div>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="resume" class="form-label">Resume (PDF / DOC)</label>
+            <div class="file-upload">
+              <button type="button" class="file-upload-button">Choose File</button>
+              <span class="file-upload-label">No file chosen</span>
+            </div>
+            <div class="helper">For demo, file is not actually uploaded but shown as part of JSON payload.</div>
+          </div>
+
+          <div class="form-field">
+            <label for="coverLetter" class="form-label">Cover letter</label>
+            <textarea id="coverLetter" class="form-input form-textarea" placeholder="Briefly share why you're a fit for this role."></textarea>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">Preferred working setup</label>
+            <div class="working-setup">
+              <label class="working-setup-option">
+                <input type="radio" name="workSetup" value="Onsite" checked />
+                Onsite
+              </label>
+              <label class="working-setup-option">
+                <input type="radio" name="workSetup" value="Remote" />
+                Remote
+              </label>
+              <label class="working-setup-option">
+                <input type="radio" name="workSetup" value="Hybrid" />
+                Hybrid
+              </label>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <div class="consent-checkbox">
+              <input id="consent" type="checkbox" />
+              <div class="consent-text">
+                I agree to the data privacy terms and AI-based screening.
+              </div>
+            </div>
+            <div class="helper">Your responses will be processed by our AI agent in compliance with data privacy standards.</div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="clearBtn">Clear form</button>
+            <button type="submit" class="btn btn-primary">
+              Submit & start AI call
+            </button>
+          </div>
+
+          <div id="statusBanner" class="status-banner status-info">
+            Submitting your application and preparing the AI pre-interview…
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast">
+    <span>✔</span>
+    <span id="toastMessage">Action completed.</span>
+  </div>
+
+  <script>
+    // Job selection
+    const jobCards = document.querySelectorAll(".job-card");
+    const selectedRoleLabel = document.getElementById("selected-role-label");
+    const jobRoleInput = document.getElementById("jobRole");
+
+    jobCards.forEach(card => {
+      card.addEventListener("click", () => {
+        const role = card.dataset.job;
+        selectedRoleLabel.textContent = role;
+        jobRoleInput.value = role;
+        jobCards.forEach(c => (c.style.borderColor = "var(--border)"));
+        card.style.borderColor = "rgba(56, 189, 248, 0.7)";
+      });
+    });
+
+    // Simple form handling (front-end only demo)
+    const form = document.getElementById("application-form");
+    const statusBanner = document.getElementById("statusBanner");
+    const clearBtn = document.getElementById("clearBtn");
+
+    clearBtn.addEventListener("click", () => {
+      form.reset();
+      selectedRoleLabel.textContent = "None";
+      jobRoleInput.value = "";
+      jobCards.forEach(c => (c.style.borderColor = "var(--border)"));
+      statusBanner.classList.remove("show");
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!jobRoleInput.value) {
+        alert("Please select a job before applying.");
+        return;
+      }
+      const consent = document.getElementById("consent");
+      if (!consent.checked) {
+        alert("Please agree to the data privacy terms before submitting.");
+        return;
+      }
+
+      statusBanner.textContent = "Submitting your application and simulating AI pre-interview call…";
+      statusBanner.classList.add("show");
+
+      // In the real integration, here you call your backend:
+      // 1. Save applicant
+      // 2. Trigger Agora AI voice call
+      // 3. Update HR dashboard via Agora RTM
+
+      setTimeout(() => {
+        statusBanner.textContent = "AI pre-interview completed. Check your email for pass/fail result.";
+        statusBanner.classList.remove("status-info");
+        statusBanner.classList.add("status-success");
+        showToast("Demo: AI interview simulation finished for this applicant.");
+      }, 1500);
+    });
+
+    // Tiny toast helper
+    const toastEl = document.getElementById("toast");
+    const toastMessageEl = document.getElementById("toastMessage");
+    let toastTimeout;
+
+    function showToast(message) {
+      toastMessageEl.textContent = message;
+      toastEl.classList.add("show");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, 2600);
+    }
+  </script>
+
+  
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgoraHire AI - Apply Now</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="logo-badge">A</div>
+        <div>
+          <div class="nav-title">AgoraHire AI</div>
+          <div class="nav-sub">AI Voice Pre-Screening · Powered by Agora + AWS</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Build your <span>AI HR Interviewer</span><br>with Agora real-time voice.</h1>
+        <p>This demo portal automates the first-round HR screening using an AI voice agent over Agora RTC.</p>
+        <div class="hero-chips">
+          <div class="chip">B2B hiring automation</div>
+          <div class="chip">Agora RTC · RTM</div>
+          <div class="chip">AWS + JSON storage</div>
+          <div class="chip">Data privacy aware</div>
+        </div>
+        <div class="hero-badges">
+          <span>AI Voice Agent online</span>
+          <span>Pre-screening time saved: ~60%</span>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-panel-header">
+          <span>AI Interview Call Preview</span>
+          <span class="status-pill">Real-time · AgoraRTC</span>
+        </div>
+        <div class="fake-call">
+          <div class="fake-avatar">AI</div>
+          <div class="fake-call-main">
+            <div class="title">AI Recruiter · Voice</div>
+            <div class="subtitle">"Tell me about your most recent role and key responsibilities."</div>
+            <div class="fake-call-badges">
+              <span>STT + LLM Scoring</span>
+              <span>HR rubric based</span>
+              <span>Pass / Fail only</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPLICANT LAYOUT -->
+    <section class="applicant-layout">
+      <!-- JOB LIST -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Open Positions</div>
+          <div class="card-subtitle">Choose a role to start your AI pre-interview.</div>
+        </div>
+        <div class="job-list">
+          <div class="job-card" data-job="Customer Support Associate">
+            <div class="job-title">Customer Support Associate</div>
+            <div class="job-meta">Customer Experience · Entry-Mid</div>
+            <div class="job-tags">
+              <span class="job-tag">Hybrid</span>
+              <span class="job-tag">B2B SaaS</span>
+            </div>
+          </div>
+          <div class="job-card" data-job="HR Operations Intern">
+            <div class="job-title">HR Operations Intern</div>
+            <div class="job-meta">People & Culture · Internship</div>
+            <div class="job-tags">
+              <span class="job-tag">Onsite</span>
+              <span class="job-tag">Fresh grads</span>
+            </div>
+          </div>
+          <div class="job-card" data-job="Cloud Support Engineer">
+            <div class="job-title">Cloud Support Engineer</div>
+            <div class="job-meta">Engineering · Mid-Senior</div>
+            <div class="job-tags">
+              <span class="job-tag">Remote</span>
+              <span class="job-tag">AWS · Kubernetes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPLICATION FORM -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Application Form</div>
+          <div class="card-subtitle">Selected role: <span id="selected-role-label">None</span></div>
+        </div>
+        <form id="application-form">
+          <input type="hidden" name="jobRole" id="jobRole" />
+          <div class="form-group">
+            <label for="fullName">Full name</label>
+            <input id="fullName" type="text" required placeholder="Juan Dela Cruz" />
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex:1">
+              <label for="email">Email</label>
+              <input id="email" type="email" required placeholder="you@example.com" />
+            </div>
+            <div class="form-group" style="flex:1">
+              <label for="phone">Phone number</label>
+              <input id="phone" type="tel" required placeholder="+63 9xx xxx xxxx" />
+              <div class="helper">Include country code for AI call.</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="resume">Resume (PDF / DOC)</label>
+            <input id="resume" type="file" accept=".pdf,.doc,.docx" />
+            <div class="helper">For demo, file is not uploaded but shown in JSON.</div>
+          </div>
+          <div class="form-group">
+            <label for="coverLetter">Cover letter</label>
+            <textarea id="coverLetter" placeholder="Briefly share why you're a fit..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Preferred working setup</label>
+            <div class="radio-group">
+              <label class="radio-pill"><input type="radio" name="workSetup" value="Onsite" checked> Onsite</label>
+              <label class="radio-pill"><input type="radio" name="workSetup" value="Remote"> Remote</label>
+              <label class="radio-pill"><input type="radio" name="workSetup" value="Hybrid"> Hybrid</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="inline-group">
+              <input type="checkbox" id="consent" required>
+              <label for="consent">I agree to data privacy terms and AI screening</label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="clearBtn">Clear form</button>
+            <button type="submit" class="btn btn-primary">Submit & start AI call</button>
+          </div>
+          <div id="statusBanner" class="status-banner status-info">Submitting application and preparing AI call…</div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ADMIN ACCESS BUTTON (Hidden in corner) -->
+  <div id="adminAccessBtn" class="admin-access-btn" title="HR Login">
+    Admin
+  </div>
+
+  <!-- MODAL BACKDROP -->
+  <div id="modalBackdrop" class="modal-backdrop"></div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

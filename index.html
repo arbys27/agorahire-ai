@@ -5,6 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AgoraHire AI - Apply Now</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Search box styling */
+    .search-box {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 40px 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: 0.16s ease;
+    }
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+    }
+    .search-input::placeholder {
+      color: var(--text-soft);
+    }
+    .search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-soft);
+      pointer-events: none;
+    }
+    .no-results {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--text-soft);
+      font-size: 14px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px dashed var(--border);
+    }
+    .no-results svg {
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+  </style>
 </head>
 <body>
   <!-- NAVBAR -->
@@ -59,14 +105,30 @@
 
     <!-- APPLICANT LAYOUT -->
     <section class="applicant-layout">
-      <!-- JOB LIST -->
+      <!-- JOB LIST WITH SEARCH -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">Open Positions</div>
-          <div class="card-subtitle">Choose a role to start your AI pre-interview.</div>
+          <div class="card-subtitle">Search and choose a role to start your AI pre-interview.</div>
         </div>
-        <div class="job-list">
-          <div class="job-card" data-job="Customer Support Associate">
+        
+        <!-- SEARCH BOX -->
+        <div class="search-box">
+          <input 
+            type="text" 
+            id="jobSearchInput" 
+            class="search-input" 
+            placeholder="Search by job title, department, or keywords..."
+          />
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+        </div>
+
+        <!-- JOB LIST -->
+        <div class="job-list" id="jobList">
+          <div class="job-card" data-job="Customer Support Associate" data-department="Customer Experience" data-level="Entry-Mid" data-tags="Hybrid,B2B SaaS">
             <div class="job-title">Customer Support Associate</div>
             <div class="job-meta">Customer Experience · Entry-Mid</div>
             <div class="job-tags">
@@ -74,7 +136,7 @@
               <span class="job-tag">B2B SaaS</span>
             </div>
           </div>
-          <div class="job-card" data-job="HR Operations Intern">
+          <div class="job-card" data-job="HR Operations Intern" data-department="People & Culture" data-level="Internship" data-tags="Onsite,Fresh grads">
             <div class="job-title">HR Operations Intern</div>
             <div class="job-meta">People & Culture · Internship</div>
             <div class="job-tags">
@@ -82,7 +144,7 @@
               <span class="job-tag">Fresh grads</span>
             </div>
           </div>
-          <div class="job-card" data-job="Cloud Support Engineer">
+          <div class="job-card" data-job="Cloud Support Engineer" data-department="Engineering" data-level="Mid-Senior" data-tags="Remote,AWS · Kubernetes">
             <div class="job-title">Cloud Support Engineer</div>
             <div class="job-meta">Engineering · Mid-Senior</div>
             <div class="job-tags">
@@ -90,6 +152,17 @@
               <span class="job-tag">AWS · Kubernetes</span>
             </div>
           </div>
+        </div>
+
+        <!-- NO RESULTS MESSAGE -->
+        <div id="noResultsMessage" class="no-results" style="display: none;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+            <line x1="8" y1="11" x2="14" y2="11"/>
+          </svg>
+          <div><strong>No jobs found</strong></div>
+          <div style="margin-top: 6px; font-size: 12px;">Try adjusting your search terms</div>
         </div>
       </div>
 
@@ -125,14 +198,7 @@
             <label for="coverLetter">Cover letter</label>
             <textarea id="coverLetter" placeholder="Briefly share why you're a fit..."></textarea>
           </div>
-          <div class="form-group">
-            <label>Preferred working setup</label>
-            <div class="radio-group">
-              <label class="radio-pill"><input type="radio" name="workSetup" value="Onsite" checked> Onsite</label>
-              <label class="radio-pill"><input type="radio" name="workSetup" value="Remote"> Remote</label>
-              <label class="radio-pill"><input type="radio" name="workSetup" value="Hybrid"> Hybrid</label>
-            </div>
-          </div>
+          
           <div class="form-group">
             <div class="inline-group">
               <input type="checkbox" id="consent" required>
@@ -149,20 +215,19 @@
     </section>
   </main>
 
-  <!-- ADMIN ACCESS BUTTON (Hidden in corner) -->
+  <!-- ADMIN ACCESS BUTTON -->
   <div id="adminAccessBtn" class="admin-icon-btn" title="HR Login">
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
-    <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-  </svg>
-</div>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </div>
 
-    <!-- MODAL BACKDROP -->
+  <!-- MODAL BACKDROP -->
   <div id="modalBackdrop" class="modal-backdrop"></div>
 
   <script src="js/script.js"></script>
 
-  <!-- UPDATED SCRIPT: Connects to interview-room.html on submit -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const selectedRoleLabel = document.getElementById("selected-role-label");
@@ -172,6 +237,45 @@
       const clearBtn = document.getElementById("clearBtn");
       const adminBtn = document.getElementById("adminAccessBtn");
       const modalBackdrop = document.getElementById("modalBackdrop");
+      const jobSearchInput = document.getElementById("jobSearchInput");
+      const jobList = document.getElementById("jobList");
+      const noResultsMessage = document.getElementById("noResultsMessage");
+
+      // === JOB SEARCH FUNCTIONALITY ===
+      jobSearchInput.addEventListener("input", (e) => {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        const jobCards = document.querySelectorAll(".job-card");
+        let hasVisibleResults = false;
+
+        jobCards.forEach(card => {
+          const jobTitle = card.dataset.job.toLowerCase();
+          const department = card.dataset.department.toLowerCase();
+          const level = card.dataset.level.toLowerCase();
+          const tags = card.dataset.tags.toLowerCase();
+
+          // Check if search term matches any field
+          const matches = jobTitle.includes(searchTerm) ||
+                         department.includes(searchTerm) ||
+                         level.includes(searchTerm) ||
+                         tags.includes(searchTerm);
+
+          if (matches) {
+            card.style.display = "flex";
+            hasVisibleResults = true;
+          } else {
+            card.style.display = "none";
+          }
+        });
+
+        // Show/hide no results message
+        if (hasVisibleResults || searchTerm === "") {
+          noResultsMessage.style.display = "none";
+          jobList.style.display = "flex";
+        } else {
+          noResultsMessage.style.display = "block";
+          jobList.style.display = "none";
+        }
+      });
 
       // === JOB SELECTION ===
       document.querySelectorAll(".job-card").forEach(card => {
@@ -181,9 +285,10 @@
           jobRoleInput.value = role;
 
           // Visual feedback
-          document.querySelectorAll(".job-card").forEach(c => 
-            c.style.borderColor = ""
-          );
+          document.querySelectorAll(".job-card").forEach(c => {
+            c.style.borderColor = "";
+            c.style.boxShadow = "";
+          });
           card.style.borderColor = "#38bdf8";
           card.style.boxShadow = "0 0 20px rgba(56,189,248,0.4)";
         });
@@ -194,9 +299,10 @@
         form.reset();
         selectedRoleLabel.textContent = "None";
         jobRoleInput.value = "";
-        document.querySelectorAll(".job-card").forEach(c => 
-          c.style.borderColor = ""
-        );
+        document.querySelectorAll(".job-card").forEach(c => {
+          c.style.borderColor = "";
+          c.style.boxShadow = "";
+        });
         statusBanner.classList.remove("show", "status-success");
       });
 
@@ -283,4 +389,4 @@
     });
   </script>
 </body>
-html>
+</html>

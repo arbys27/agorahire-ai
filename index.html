@@ -150,13 +150,137 @@
   </main>
 
   <!-- ADMIN ACCESS BUTTON (Hidden in corner) -->
-  <div id="adminAccessBtn" class="admin-access-btn" title="HR Login">
-    Admin
-  </div>
+  <div id="adminAccessBtn" class="admin-icon-btn" title="HR Login">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>
+</div>
 
-  <!-- MODAL BACKDROP -->
+    <!-- MODAL BACKDROP -->
   <div id="modalBackdrop" class="modal-backdrop"></div>
 
   <script src="js/script.js"></script>
+
+  <!-- UPDATED SCRIPT: Connects to interview-room.html on submit -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const selectedRoleLabel = document.getElementById("selected-role-label");
+      const jobRoleInput = document.getElementById("jobRole");
+      const statusBanner = document.getElementById("statusBanner");
+      const form = document.getElementById("application-form");
+      const clearBtn = document.getElementById("clearBtn");
+      const adminBtn = document.getElementById("adminAccessBtn");
+      const modalBackdrop = document.getElementById("modalBackdrop");
+
+      // === JOB SELECTION ===
+      document.querySelectorAll(".job-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const role = card.dataset.job;
+          selectedRoleLabel.textContent = role;
+          jobRoleInput.value = role;
+
+          // Visual feedback
+          document.querySelectorAll(".job-card").forEach(c => 
+            c.style.borderColor = ""
+          );
+          card.style.borderColor = "#38bdf8";
+          card.style.boxShadow = "0 0 20px rgba(56,189,248,0.4)";
+        });
+      });
+
+      // === CLEAR FORM ===
+      clearBtn?.addEventListener("click", () => {
+        form.reset();
+        selectedRoleLabel.textContent = "None";
+        jobRoleInput.value = "";
+        document.querySelectorAll(".job-card").forEach(c => 
+          c.style.borderColor = ""
+        );
+        statusBanner.classList.remove("show", "status-success");
+      });
+
+      // === FORM SUBMIT → GO TO AI INTERVIEW ROOM ===
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Basic validation
+        if (!jobRoleInput.value) {
+          alert("Please select a job position first.");
+          return;
+        }
+        if (!document.getElementById("consent").checked) {
+          alert("You must agree to the terms and AI screening.");
+          return;
+        }
+
+        // Show connecting message
+        statusBanner.textContent = "Application received! Connecting you to AI Interviewer...";
+        statusBanner.classList.add("show");
+        statusBanner.classList.remove("status-success");
+
+        // Fake delay for realism
+        setTimeout(() => {
+          // Save applicant data temporarily (for demo feel)
+          const applicant = {
+            name: document.getElementById("fullName").value || "Candidate",
+            role: jobRoleInput.value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value
+          };
+          sessionStorage.setItem("currentApplicant", JSON.stringify(applicant));
+
+          // Redirect to AI Interview Room
+          window.location.href = "interview-room.html";
+        }, 2200);
+      });
+
+      // === ADMIN BUTTON → HR LOGIN MODAL ===
+      adminBtn.addEventListener("click", () => {
+        modalBackdrop.innerHTML = `
+          <div class="modal">
+            <div class="modal-header">
+              <div class="modal-title">HR Login</div>
+              <button class="btn btn-ghost" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <p style="text-align:center; margin:16px 0; color:#94a3b8;">
+                  Demo credentials:<br><strong>admin@demo.com</strong> / <strong>123456</strong>
+                </p>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" value="admin@demo.com" />
+                </div>
+                <div class="form-group">
+                  <label>Password</label>
+                  <input type="password" value="123456" />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost" id="closeModal2">Cancel</button>
+              <button class="btn btn-primary" id="loginBtn">Login to HR Panel</button>
+            </div>
+          </div>
+        `;
+        modalBackdrop.classList.add("show");
+
+        document.querySelectorAll("#closeModal, #closeModal2").forEach(btn => {
+          btn.addEventListener("click", () => modalBackdrop.classList.remove("show"));
+        });
+
+        document.getElementById("loginBtn").addEventListener("click", () => {
+          window.location.href = "hr-dashboard.html";
+        });
+      });
+
+      // Pulse animation for admin button
+      setTimeout(() => {
+        adminBtn.classList.add("pulse");
+        setTimeout(() => adminBtn.classList.remove("pulse"), 3000);
+      }, 800);
+    });
+  </script>
 </body>
-</html>
+html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Interview Room - AgoraHire AI</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .video-container {
+      position: relative;
+      background: #000;
+      border-radius: 16px;
+      height: 480px;
+      overflow: hidden;
+      border: 2px solid rgba(56,189,248,0.2);
+    }
+    #localVideo {
+      width: 180px;
+      height: 135px;
+      border-radius: 12px;
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 10;
+      border: 3px solid #38bdf8;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+      object-fit: cover;
+    }
+    .ai-avatar {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #38bdf8;
+      font-size: 18px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .ai-avatar.active { opacity: 1; }
+
+    /* Transcript: newest at bottom */
+    .transcript-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 4px 12px 12px 4px;
+      font-size: 14.5px;
+      line-height: 1.7;
+    }
+    .transcript-box::-webkit-scrollbar { width: 6px; }
+    .transcript-box::-webkit-scrollbar-track { background: transparent; }
+    .transcript-box::-webkit-scrollbar-thumb {
+      background: rgba(56,189,248,0.5);
+      border-radius: 3px;
+    }
+    .msg {
+      max-width: 90%;
+    }
+    .msg.ai { align-self: flex-start; }
+    .msg.you { align-self: flex-end; color: #94a3b8; }
+    .status-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: #38bdf8;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100% {opacity:0.5} 50% {opacity:1} }
+    .media-panel {
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(56,189,248,0.3);
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 13px;
+    }
+    select {
+      background: rgba(30,41,59,0.9);
+      border: 1px solid rgba(56,189,248,0.4);
+      color: #e5e7eb;
+      padding: 8px 12px;
+      border-radius: 8px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="logo-badge">A</div>
+        <div>
+          <div class="nav-title">AgoraHire AI</div>
+          <div class="nav-sub">Live AI Interview Room</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell" style="max-width: 1400px;">
+    <div style="display: grid; grid-template-columns: 1fr 380px; gap: 24px; height: calc(100vh - 140px);">
+      
+      <!-- LEFT -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="video-container">
+          <video id="localVideo" autoplay playsinline muted></video>
+          <div class="ai-avatar" id="aiAvatar">
+            <svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8">
+              <circle cx="12" cy="8" r="5"/>
+              <path d="M3 21c0-5 5-9 9-9s9 4 9 9"/>
+            </svg>
+            <p style="margin-top: 16px; font-size: 19px;">AI Interviewer (Agora RTC)</p>
+            <span>Video stream active</span>
+          </div>
+        </div>
+
+        <div class="card" style="flex: 1; padding: 18px;">
+          <h3 style="color: #38bdf8; margin-bottom: 14px;">Live Transcript</h3>
+          <div id="transcript" class="transcript-box">
+            <div class="msg ai" style="color:#94a3b8;"><em>Click "Start Interview" to begin...</em></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="media-panel">
+          <h3 style="color: #38bdf8; margin-bottom: 14px;">Media Devices</h3>
+          <div style="margin-bottom: 12px;">
+            <label style="display:block; margin-bottom: 6px; color:#94a3b8;">Microphone</label>
+            <select id="micSelect"></select>
+          </div>
+          <div>
+            <label style="display:block; margin-bottom: 6px; color:#94a3b8;">Camera</label>
+            <select id="camSelect"></select>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 18px;">
+          <h3>Interview Status</h3>
+          <div style="margin-top: 14px; font-size: 14.5px;">
+            <p><span class="status-dot"></span> Connected to AI</p>
+            <p><span class="status-dot"></span> Listening...</p>
+            <p style="color:#f97373; margin-top:12px;">
+              <strong>Time elapsed:</strong> <span id="timer">00:00</span>
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 14px;">
+          <button class="btn btn-primary" id="startBtn" style="padding: 16px; font-size: 16px;">
+            Start Interview
+          </button>
+          <button class="btn btn-primary" id="endBtn" style="display:none; padding: 16px; font-size: 16px;">
+            End Interview & View Results
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const localVideo = document.getElementById("localVideo");
+    const aiAvatar = document.getElementById("aiAvatar");
+    const transcript = document.getElementById("transcript");
+    const timerEl = document.getElementById("timer");
+    const startBtn = document.getElementById("startBtn");
+    const endBtn = document.getElementById("endBtn");
+    const micSelect = document.getElementById("micSelect");
+    const camSelect = document.getElementById("camSelect");
+
+    let stream;
+    let seconds = 0;
+    let timer;
+
+    const addMsg = (speaker, text) => {
+      const div = document.createElement("div");
+      div.className = `msg ${speaker === "You" ? "you" : "ai"}`;
+      div.innerHTML = `<strong>${speaker}:</strong> ${text}`;
+      transcript.appendChild(div);
+      transcript.scrollTop = transcript.scrollHeight;
+    };
+
+    async function loadDevices() {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoInputs = devices.filter(d => d.kind === "videoinput");
+        const audioInputs = devices.filter(d => d.kind === "audioinput");
+
+        videoInputs.forEach((d, i) => {
+          const opt = new Option(d.label || `Camera ${i+1}`, d.deviceId);
+          camSelect.add(opt);
+        });
+        audioInputs.forEach((d, i) => {
+          const opt = new Option(d.label || `Microphone ${i+1}`, d.deviceId);
+          micSelect.add(opt);
+        });
+      } catch (e) { console.log(e); }
+    }
+
+    async function startMedia() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { deviceId: camSelect.value ? { exact: camSelect.value } : undefined },
+          audio: { deviceId: micSelect.value ? { exact: micSelect.value } : undefined }
+        });
+        localVideo.srcObject = stream;
+        await loadDevices();
+      } catch (err) {
+        alert("Please allow camera & microphone access.\nError: " + err.message);
+      }
+    }
+
+    startBtn.onclick = () => {
+      aiAvatar.classList.add("active");
+      startBtn.style.display = "none";
+      endBtn.style.display = "block";
+
+      timer = setInterval(() => {
+        seconds++;
+        const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const s = String(seconds % 60).padStart(2, "0");
+        timerEl.textContent = `${m}:${s}`;
+      }, 1000);
+
+      transcript.innerHTML = "";
+      addMsg("AI", "Hello! Thank you for applying. Let's begin.");
+      addMsg("AI", "Can you please describe your most recent role and key responsibilities?");
+
+      setTimeout(() => addMsg("You", "I have been working as a backend developer for 6 years..."), 6000);
+      setTimeout(() => addMsg("AI", "Great! Do you have experience with cloud platforms?"), 12000);
+      setTimeout(() => addMsg("You", "Yes, I have strong experience with AWS and Azure."), 18000);
+      setTimeout(() => addMsg("AI", "Excellent. We're wrapping up now."), 24000);
+    };
+
+    endBtn.onclick = () => {
+      clearInterval(timer);
+      if (stream) stream.getTracks().forEach(t => t.stop());
+      window.location.href = "interview-summary.html";
+    };
+
+    // Start camera/mic on load
+    startMedia();
+  </script>
+</body>
+</html>

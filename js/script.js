@@ -1,4 +1,3 @@
-// js/script.js - Modular & Clean
 
 document.addEventListener("DOMContentLoaded", () => {
   const selectedRoleLabel = document.getElementById("selected-role-label");
@@ -8,6 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearBtn = document.getElementById("clearBtn");
   const adminBtn = document.getElementById("adminAccessBtn");
   const modalBackdrop = document.getElementById("modalBackdrop");
+
+  setTimeout(() => {
+  const btn = document.getElementById("adminAccessBtn");
+  if (btn) {
+    btn.classList.add("pulse");
+    setTimeout(() => btn.classList.remove("pulse"), 3000);
+  }
+}, 800);
 
   // Job selection
   document.querySelectorAll(".job-card").forEach(card => {
@@ -95,3 +102,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
